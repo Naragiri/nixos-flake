@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     deploy-rs = {
       url = "github:serokell/deploy-rs";
@@ -23,7 +22,7 @@
     };
 
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.3.0";
+      url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -57,9 +56,6 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # i hate nintendo.
-    # yuzu-fix.url = "github:nixos/nixpkgs/d89fdbfc985022d183073cb52df4d35b791d42cf";
   };
 
   outputs =
@@ -85,10 +81,6 @@
         permittedInsecurePackages = [ "electron-25.9.0" ];
       };
 
-      systems.hosts.hades.modules = [ ./disks/hades.nix ];
-
-      systems.hosts.zeus.modules = [ ./disks/zeus.nix ];
-
       templates = import ./templates { };
 
       outputs-builder = channels: {
@@ -99,5 +91,8 @@
           };
         };
       };
+    }
+    // {
+      nixosModules.nos = import ./modules;
     };
 }

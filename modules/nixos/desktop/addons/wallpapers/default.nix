@@ -21,16 +21,18 @@ in
 
   options.nos.desktop.addons.wallpapers = {
     enable = mkEnableOption "Enable wallpapers.";
-    # TODO: make colorscheme global.
-    colorscheme = mkOption {
-      default = "catppuccin-mocha";
-      description = "The colorscheme to apply to wallpapers.";
-      type = types.oneOf [
-        types.str
-        types.attrs
-      ];
+    prism = {
+      enable = mkEnableOption "Enable prism wallpaper recoloring.";
+      # TODO: make colorscheme global.
+      colorscheme = mkOption {
+        default = "catppuccin-mocha";
+        description = "The colorscheme to apply to wallpapers.";
+        type = types.oneOf [
+          types.str
+          types.attrs
+        ];
+      };
     };
-    prism.enable = mkEnableOption "Enable prism wallpaper recoloring.";
     wallpapersDir = mkOption {
       default = "/home/${config.nos.user.name}/Pictures/Wallpapers";
       description = "The directory to store wallpapers.";
@@ -44,10 +46,10 @@ in
       source =
         let
           scheme =
-            if builtins.isAttrs cfg.colorscheme then
-              lib.attrsets.attrValues cfg.colorscheme
+            if builtins.isAttrs cfg.prism.colorscheme then
+              lib.attrsets.attrValues cfg.prism.colorscheme
             else
-              lib.attrsets.attrValues inputs.nix-colors.colorschemes.${cfg.colorscheme}.palette;
+              lib.attrsets.attrValues inputs.nix-colors.colorschemes.${cfg.prism.colorscheme}.palette;
           colors = "-- '${builtins.concatStringsSep "' '" scheme}'";
         in
         if cfg.prism.enable then

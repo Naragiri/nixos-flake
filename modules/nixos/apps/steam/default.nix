@@ -182,7 +182,7 @@ in
         type = types.path;
         default = "/home/${config.nos.user.name}/.steamos";
       };
-      deckyLoader.enable = mkEnableOption "Enable decky loader for steamos.";
+      decky-loader.enable = mkEnableOption "Enable decky loader for steamos.";
       resolution = mkOption {
         type = types.attrs;
         default = {
@@ -199,11 +199,11 @@ in
       };
       maxRefreshRate = mkOption {
         type = types.number;
-        default = 60;
+        default = 120;
       };
       preferredOutput = mkOption {
         type = types.str;
-        default = "HDMI-A-1";
+        default = "DP-3";
       };
     };
   };

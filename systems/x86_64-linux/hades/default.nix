@@ -11,6 +11,7 @@ in
 {
   imports = with inputs; [
     ./hardware-configuration.nix
+    ./disk-configuration.nix
     nixos-hardware.nixosModules.common-gpu-amd
   ];
 
@@ -22,6 +23,7 @@ in
       chromium = enabled // {
         makeDefaultBrowser = true;
       };
+      clapper = enabled;
       discord = enabled;
       emulators = {
         citra = enabled;
@@ -49,20 +51,28 @@ in
         protonup = enabled;
         rom-manager = enabled;
         steamos = enabled // {
-          deckyLoader = enabled;
+          decky-loader = enabled;
         };
       };
-      terminal.kitty = enabled;
-      vscode = enabled;
+      terminal = {
+        alacritty = enabled;
+        kitty = enabled // {
+          themeFile = "Catppuccin-Mocha";
+        };
+      };
+      vscode = enabled // {
+        customCSS = enabled;
+      };
       waydroid = enabled;
     };
     cli-apps = {
       ani-cli = enabled;
       fastfetch = enabled;
       lf = enabled;
+      matugen = enabled;
       # neovim = enabled;
       # wallust = enabled // {
-      #   shell = enabled;
+      #   addons.shell = enabled;
       # };
     };
     desktop = {
@@ -80,17 +90,16 @@ in
             package = pkgs.tela-icon-theme;
           };
           theme = {
-            # name = "catppuccin-mocha-teal-compact";
-            # package = pkgs.catppuccin-gtk.override {
-            #   accents = [ "teal" ];
-            #   variant = "mocha";
-            #   size = "compact";
-            # };
-            name = "Skeuos-Cyan-Dark";
-            package = pkgs.nos.skeuos-gtk-theme.override {
-              variant = "Dark";
-              colorVariant = "Cyan";
+            name = "catppuccin-mocha-blue-compact";
+            package = pkgs.catppuccin-gtk.override {
+              accents = [ "blue" ];
+              variant = "mocha";
+              size = "compact";
             };
+            # name = "Skeuos-Blue-Dark";
+            # package = pkgs.nos.skeuos-gtk-theme.override {
+            #   colorScheme = { };
+            # };
           };
         };
         polkit-gnome = enabled;
@@ -112,7 +121,9 @@ in
         greetd = enabled;
         swaync = enabled;
         wallpapers = enabled // {
-          # prism = enabled;
+          # prism = enabled // {
+          #   colorscheme = "catppuccin-mocha";
+          # };
         };
         waybar = enabled;
         waypaper = enabled // {
@@ -127,6 +138,7 @@ in
             height = 1440;
             refreshRate = 144;
             position = "0x0";
+            vrr = true;
             workspaces = [
               10
               11
@@ -145,6 +157,7 @@ in
             height = 1440;
             refreshRate = 144;
             position = "2560x0";
+            vrr = true;
             workspaces = [
               1
               2
@@ -158,7 +171,7 @@ in
             ];
           }
           {
-            name = "HDMI-A-1";
+            name = "DP-3";
             disabled = true;
           }
         ];
@@ -200,11 +213,15 @@ in
       };
     };
     tools = {
-      common = enabled;
+      common = enabled // {
+        fun = enabled;
+      };
+      devenv = enabled;
       direnv = enabled;
       disko = enabled;
       nix-ld = enabled;
       git = enabled;
+      gpu-screen-recorder = enabled;
       qmk = enabled;
       zoxide = enabled;
     };
@@ -218,7 +235,7 @@ in
   };
 
   services.xserver.displayManager.setupCommands = ''
-    ${getExe pkgs.xorg.xrandr} --output DP-1 --primary --mode 2560x1440 --output DP-2 --mode 2560x1440 --left-of DP-1 --output HDMI-1 --off
+    ${getExe pkgs.xorg.xrandr} --output DP-1 --primary --mode 2560x1440 --output DP-2 --mode 2560x1440 --left-of DP-1 --output DP-3 --off
   '';
 
   system.stateVersion = "23.11";

@@ -34,6 +34,10 @@ let
     extension = vscode-extensions.mkhl.direnv;
   };
 
+  rust-analyzer = configuredExtension {
+    extension = vscode-extensions.rust-lang.rust-analyzer;
+  };
+
   nix-ide = configuredExtension {
     extension = vscode-extensions.jnoortheen.nix-ide;
     settings = {
@@ -52,15 +56,14 @@ let
             "command" = [ "${lib.getExe pkgs.nixfmt-rfc-style}" ];
           };
           nixpkgs = {
-            "expr" = "import (builtins.getFlake \"/home/${config.nos.user.name}/Repos/naraos/nixos-flake\").inputs.nixpkgs { }";
+            "expr" =
+              "import (builtins.getFlake \"/home/${config.nos.user.name}/Repos/naraos/nixos-flake\").inputs.nixpkgs { }";
           };
           options = {
             nixos = {
-              "expr" = "(builtins.getFlake \"/home/${config.nos.user.name}/Repos/naraos/nixos-flake\").nixosConfigurations.${config.networking.hostName}.options";
+              "expr" =
+                "(builtins.getFlake \"/home/${config.nos.user.name}/Repos/naraos/nixos-flake\").nixosConfigurations.${config.networking.hostName}.options";
             };
-            # home-manager = {
-            #   "expr" = "(builtins.getFlake \"/home/${config.nos.user.name}/Repos/naraos/nixos-flake\").homeConfigurations.${config.nos.user.name}@${config.networking.hostName}.options";
-            # };
           };
         };
       };
@@ -73,6 +76,7 @@ in
     material-icon-theme
     indent-rainbow
     direnv
+    rust-analyzer
     nix-ide
   ];
 }

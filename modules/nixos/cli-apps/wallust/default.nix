@@ -50,9 +50,11 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.wallust ];
 
+    nos.desktop.addons.waypaper.onWallpaperChange = [ "wallust run $1" ];
+
     nos = {
       cli-apps.wallust.templates = {
-        "pywal-compat" = mkIf cfg.pywalCompat.enable {
+        "pywal-compat" = mkIf cfg.addons.pywal.enable {
           text = ''
             {{color0}}
             {{color1}}
@@ -76,7 +78,7 @@ in
       };
 
       home = {
-        extraOptions.programs = mkIf cfg.shell.enable {
+        extraOptions.programs = mkIf cfg.addons.shell.enable {
           zsh.initExtra = mkIf (config.nos.system.shell.name == "zsh") ''
             sequences="/home/${config.nos.user.name}/.cache/wallust/sequences"
             if [ -e "$sequences" ]; then

@@ -18,7 +18,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    # environment.systemPackages = [ pkgs.spotify ]; 
     programs.spicetify = enabled // {
       enabledExtensions =
         let
@@ -27,6 +26,7 @@ in
         with spicetify-pkgs.extensions;
         [
           adblock
+          beautifulLyrics
         ];
     };
   };

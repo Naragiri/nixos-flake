@@ -65,6 +65,11 @@ in
               default = 60;
               description = "The refresh rate of the display.";
             };
+            vrr = mkOption {
+              type = types.bool;
+              description = "Is the display enabled?";
+              default = false;
+            };
             scale = mkOption {
               type = lib.types.str;
               default = "1";
@@ -100,6 +105,16 @@ in
       withUWSM = true;
     };
 
+    nos.cli-apps.matugen.templates."hyprland-colors" = {
+      outputPath = "/home/${config.nos.user.name}/.config/hypr/colors.conf";
+      text = ''
+        $image = {{image}}
+        <* for name, value in colors *>
+        ''${{name}} = rgba({{value.default.hex_stripped}}ff)
+        <* endfor *>
+      '';
+    };
+
     nos.home.extraOptions.wayland.windowManager.hyprland = enabled // {
       systemd = disabled;
       xwayland = enabled;
@@ -108,6 +123,7 @@ in
           inherit
             lib
             config
+            pkgs
             inputs
             workspace-sh
             screenshot-sh
@@ -124,6 +140,7 @@ in
                   monitor.position
                   monitor.scale
                 ]
+                ++ optionals monitor.vrr [ "vrr,1" ]
                 ++ optionals monitor.vertical [ "transform,1" ]
               )
             else
@@ -145,8 +162,8 @@ in
     environment.systemPackages = [
       workspace-sh
       screenshot-sh
-      pkgs.wl-clipboard
-      pkgs.xclip
+      # pkgs.wl-clipboard
+      # pkgs.xclip
     ];
 
     environment = {

@@ -1,0 +1,40 @@
+{
+    "gpu-screen-recorder-notification": {
+        "cargoLocks": null,
+        "date": "2025-01-07",
+        "extract": null,
+        "name": "gpu-screen-recorder-notification",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": true,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "4eaeba2a39874c76bfc71d69b97f7619f471747a",
+            "sha256": "sha256-i5rHyG66ZduibiL/zhriR/tS+yd5IVn2+heD3NiOluo=",
+            "type": "git",
+            "url": "https://repo.dec05eba.com/gpu-screen-recorder-notification"
+        },
+        "version": "4eaeba2a39874c76bfc71d69b97f7619f471747a"
+    },
+    "gpu-screen-recorder-ui": {
+        "cargoLocks": null,
+        "date": "2025-01-19",
+        "extract": null,
+        "name": "gpu-screen-recorder-ui",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": true,
+            "leaveDotGit": false,
+            "name": null,
+            "rev": "92401d8bc8fa3cbc8017936eb1d18280199942e0",
+            "sha256": "sha256-dOsJvdW+cZ7U03XUEYgAA6GniQ85jl/HO9vRqzPLKEs=",
+            "type": "git",
+            "url": "https://repo.dec05eba.com/gpu-screen-recorder-ui"
+        },
+        "version": "92401d8bc8fa3cbc8017936eb1d18280199942e0"
+    }
+}

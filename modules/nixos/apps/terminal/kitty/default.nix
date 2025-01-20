@@ -10,6 +10,7 @@ let
     mkOption
     types
     ;
+  inherit (lib.nos) enabled;
   cfg = config.nos.apps.terminal.kitty;
 in
 {
@@ -32,15 +33,29 @@ in
       "ssh" = "kitten ssh";
     };
 
-    nos.home.extraOptions.programs.kitty = {
+    nos.cli-apps.matugen.templates."kitty-colors" = {
+      outputPath = "/home/${config.nos.user.name}/.config/kitty/colors.conf";
+      text = ''
+        cursor {{colors.on_surface.default.hex}}
+        cursor_text_color {{colors.on_surface_variant.default.hex}}
+
+        foreground            {{colors.on_surface.default.hex}}
+        background            {{colors.surface.default.hex}}
+        selection_foreground  {{colors.on_secondary.default.hex}}
+        selection_background  {{colors.secondary_fixed_dim.default.hex}}
+        url_color             {{colors.primary.default.hex}}
+      '';
+    };
+
+    nos.home.extraOptions.programs.kitty = enabled // {
       inherit (cfg) themeFile;
-      enable = true;
+      extraConfig = "include colors.conf";
       font = {
-        name = "Caskaydia Code Nerd Font";
+        name = "CaskaydiaCove Nerd Font";
         size = 16;
       };
       settings = cfg.extraConfig // {
-        background_opacity = "0.8";
+        background_opacity = "0.85";
         confirm_os_window_close = 0;
         enable_audio_bell = "no";
         window_padding_width = 8;

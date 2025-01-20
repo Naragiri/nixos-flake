@@ -24,6 +24,7 @@ let
     enableUpdateCheck = false;
     userSettings = import ./settings.nix;
     keybindings = import ./keybindings.nix { inherit lib; };
+    mutableExtensionsDir = false;
   };
 in
 {
@@ -35,8 +36,31 @@ in
 
   options.nos.apps.vscode = {
     enable = mkEnableOption "Enable vscode with custom config.";
+    customCSS = {
+      enable = mkEnableOption "Enable custom css injection into vscode.";
+      text = mkOption {
+        default = builtins.readFile ./custom.css;
+        description = "Custom css to inject into vscode.";
+        type = types.nullOr types.lines;
+      };
+    };
     package = mkOption {
-      default = pkgs.vscodium;
+      default =
+        if cfg.customCSS.enable then
+          pkgs.vscodium.overrideAttrs (_: {
+            # Credits for original extension: https://github.com/be5invis/vscode-custom-css/blob/master/src/extension.js
+            postInstall =
+              let
+                custom-css = pkgs.writeText "custom-css" cfg.customCSS.text;
+              in
+              ''
+                install -Dm644 ${custom-css} $out/lib/vscode/resources/app/out/vs/code/electron-sandbox/workbench/custom.css
+                substituteInPlace $out/lib/vscode/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html \
+                  --replace "</head>" "<link rel="stylesheet" href="custom.css"></head>"
+              '';
+          })
+        else
+          pkgs.vscodium;
       description = "The vscode package.";
       type = types.package;
     };

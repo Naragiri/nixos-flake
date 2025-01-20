@@ -1,8 +1,13 @@
 { lib, ... }:
 let
-  inherit (lib) types;
+  inherit (lib)
+    types
+    escape
+    concatStringsSep
+    mapAttrsToList
+    ;
 in
-{
+rec {
   mkEnabledOption =
     description:
     lib.mkOption {
@@ -52,4 +57,15 @@ in
         );
     in
     f [ ] attrLists;
+
+  escapeIfNecessary =
+    let
+      needsEscaping = str: null != builtins.match "[a-zA-Z0-9]+" str;
+    in
+    str: if needsEscaping str then str else ''"${escape [ "\$" "\"" "\\" "\`" ] str}"'';
+
+  attrsToLines =
+    attrs:
+    concatStringsSep "\n" (mapAttrsToList (n: v: ''${n}=${escapeIfNecessary (toString v)}'') attrs)
+    + "\n";
 }

@@ -10,6 +10,7 @@ let
     mkIf
     mkOption
     types
+    concatStringsSep
     ;
   inherit (lib.nos) recursiveMergeAttrs;
   cfg = config.nos.desktop.addons.waypaper;
@@ -23,15 +24,20 @@ in
       description = "The backend package for waypaper.";
       type = types.package;
     };
+    extraSettings = mkOption {
+      default = { };
+      description = "Extra settings for config.ini";
+      type = types.attrs;
+    };
     finalPackage = mkOption {
       description = "The final waypaper package with backends.";
       readOnly = true;
       type = types.package;
     };
-    extraSettings = mkOption {
-      default = { };
-      description = "Extra settings for config.ini";
-      type = types.attrs;
+    onWallpaperChange = mkOption {
+      default = [ ];
+      description = "Commands to run when a wallpaper is changed.";
+      type = types.listOf types.str;
     };
   };
 
@@ -70,7 +76,7 @@ in
                     ln -sf "$1" "${currentWallpaperFile}"
                   fi
 
-                  ${if config.nos.cli-apps.wallust.enable then "wallust run $1" else ""}
+                  ${concatStringsSep "\n" cfg.onWallpaperChange}
                 '';
               in
               "${waypaper-post_command} $wallpaper";

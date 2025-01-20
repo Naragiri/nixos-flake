@@ -1,13 +1,18 @@
 {
   lib,
   config,
+  pkgs,
   inputs,
   workspace-sh,
   screenshot-sh,
   ...
 }:
 let
-  inherit (lib) getExe optionals map;
+  inherit (lib)
+    getExe
+    optionals
+    map
+    ;
   inherit (lib.nos) createUWSMCommand;
   inherit (inputs.nix-colors.colorschemes.${colorscheme}) palette;
 
@@ -34,7 +39,7 @@ in
   "$fileManager" = "nemo";
 
   "$mod" = "SUPER";
-  "$terminal" = "kitty";
+  "$terminal" = "alacritty";
 
   animations = {
     enabled = true;
@@ -53,11 +58,12 @@ in
       "$mod, E, exec, ${createUWSMCommand "$fileManager"}"
       "$mod, Return, exec, ${createUWSMCommand "$terminal"}"
       "$mod, Q, killactive"
-      "$mod ALT, Q, exit"
+      "$mod ALT, Q, exit" # exec, uwsm stop" doesn't work atm.
       "$mod, V, togglefloating"
       "$mod SHIFT, V, fullscreen"
-      "$mod SHIFT, period, exec, ${createUWSMCommand "${getExe config.nos.apps.vscode.package} /home/${config.nos.user.name}/Repos/naraos/nixos-flake"}"
+      "$mod SHIFT, period, exec, ${getExe config.nos.apps.vscode.package} /home/${config.nos.user.name}/Repos/naraos/nixos-flake"
       "$mod SHIFT, V, fullscreen"
+      "$mod ALT, L, exec, ${createUWSMCommand "sleep 1 && hyprctl dispatch dpms off"}"
       ", XF86AudioRaiseVolume, exec, ${createUWSMCommand "wpctl set-volume @DEFAULT_SINK@ 5%+"}"
       ", XF86AudioLowerVolume, exec, ${createUWSMCommand "wpctl set-volume @DEFAULT_SINK@ 5%-"}"
     ]
@@ -111,6 +117,7 @@ in
   exec-once =
     map createUWSMCommand [
       # "wl-paste -t text -w xclip -selection clipboard"
+      "${getExe pkgs.wl-clip-persist} --clipboard both"
       "${getExe config.nos.desktop.addons.waybar.package}"
       "${getExe config.nos.desktop.addons.waypaper.finalPackage} --restore"
       "$browser"
@@ -127,8 +134,10 @@ in
 
     border_size = 3;
 
-    "col.active_border" = "rgba(${palette.base0D}ee)";
-    "col.inactive_border" = "rgba(000000ee)";
+    "col.active_border" =
+      if config.nos.cli-apps.matugen.enable then "$primary" else "rgba(${palette.base0D}ee)";
+    "col.inactive_border" =
+      if config.nos.cli-apps.matugen.enable then "$inverse_primary" else "rgba(000000ee)";
 
     resize_on_border = false;
 
@@ -159,25 +168,27 @@ in
     mouse_move_enables_dpms = true;
   };
 
-  windowrulev2 = [
-    "tag +browser, class:(Brave-browser)"
-    "tag +browser, class:(brave-browser)"
-    "tag +browser, class:(zen-alpha)"
+  source = optionals config.nos.cli-apps.matugen.enable [ "colors.conf" ];
 
-    "tag +pip, title:(Picture in picture)"
-    "tag +pip, title:(Picture-In-Picture)"
-    "tag +pip, title:(Picture-in-Picture)"
-    "tag +discord, class:(vesktop)"
-    "tag +vscode, title:(VSCodium)"
-    "tag +vscode, title:(Cursor)"
-    "tag +music, title:(Spotify Premium)"
-    "tag +music, title:(Spotify Free)"
+  windowrulev2 = [
+    "tag +browser,class:(Brave-browser)"
+    "tag +browser,class:(brave-browser)"
+    "tag +browser,class:(zen-alpha)"
+
+    "tag +pip,title:(Picture in picture)"
+    "tag +pip,title:(Picture-In-Picture)"
+    "tag +pip,title:(Picture-in-Picture)"
+    "tag +discord,class:(vesktop)"
+    "tag +vscode,class:(codium)"
+    "tag +music,title:(Spotify Premium)"
+    "tag +music,title:(Spotify Free)"
+    "tag +music,class:(spotify)"
     "tag +terminal,class:(kitty)"
 
     "tag +games,title:(FINAL FANTASY XIV)"
     "tag +games,class:(genshinimpact.exe)"
     "tag +games,class:(Overwatch2.exe)"
-    "tag +games,class:(^steam_app_)"
+    "tag +games,class:(^steam_app_\\d+$)"
 
     "opacity 0.98,tag:vscode"
     "opacity 0.98,tag:discord"
@@ -193,9 +204,13 @@ in
     "center,class:(io.ente.auth)"
 
     "float,class:(Rofi)"
-    "opacity 0.98,class:(Rofi)"
+    "opacity 0.9,class:(Rofi)"
     "center,class:(Rofi)"
     "dimaround,class:(Rofi)"
+
+    "float,title:(gsr ui)"
+    "center,title:(gsr ui)"
+    "noanim,title:(gsr ui)"
 
     "opacity 0.98,class:(waypaper)"
     "float,class:(waypaper)"

@@ -1,6 +1,8 @@
 # naraos-nixos-flake
 
 # TODO:
+- [] Move all home-manager related files into a seperate module and makes a homes/nara@hades # Think of a better solution than declaring things twice
+
 - [] Overhaul modules to avoid using the 'with' anti-pattern. [?] means recheck for enable = true; and with pkgs;
   - [?] apps
   - [x] cli-apps
@@ -16,22 +18,23 @@
 - Upgrade hyprland
   - [x] better waybar theme.
   - [] hypridle
-  - [] wlogout
   - [] hyprlock
-  - [] ags?
+  - [] ags? (hyprpanel?)
 
 - [x] Fix rofi-themes module.
 
 - [] Move back to firefox.
   - [] Install BetterFox (https://github.com/yokoffing/BetterFox)
 
-- [] Wallust on everything
+- [] Matugen on everything
   - [x] shell/terminal
-  - [] hyprland
-  - [] waybar
+  - [x] hyprland
+  - [x] waybar
   - [] vscodium
   - [] firefox
-  - [x] discord
+  - [] discord
+  - [] gtk
+  - [] icons (with catppuccin color closest)
 
 - [] Fix hades & zeus
   - [] hades

@@ -12,6 +12,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix
+    ./disk-configuration.nix
     nixos-hardware.nixosModules.framework-16-7040-amd
     nixos-hardware.nixosModules.common-gpu-amd
   ];
@@ -40,7 +41,73 @@ in
         protonup = enabled;
       };
       terminal.kitty = enabled;
-      vscode = enabled;
+      vscode = enabled // {
+        customCSS = ''
+                    /* Tabs */
+          .tabs-container {
+              font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;
+          }
+
+          .monaco-workbench .part.editor>.content .editor-group-container>.title .tabs-container>.tab .tab-label a, .monaco-workbench .part.editor>.content .editor-group-container>.title .title-label a {
+              font-size: 11px;
+          }
+
+          .line-numbers {
+              position: relative !important;
+              width: 25px !important;
+              font-size: 14px !important;
+              font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;
+          }
+
+          /* File Explorer Item Label */
+          .monaco-tree .monaco-tree-row .label-name,
+          .monaco-list .monaco-list-row
+          .monaco-icon-label .label-name {
+              font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;
+              font-size: 12px !important;
+              font-weight: 400 !important;
+          }
+
+          /* Scroll Bar */
+          .slider {
+              position: absolute !important;
+              right: 5px !important;
+              width: 5px !important;
+              left: auto !important;
+          }
+
+          /* Search Label */
+          .search-label {
+              font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;
+          }
+
+          /* Command Palette */
+          .quick-input-widget {
+              transform: translateY(-50%) !important;
+              top: 50% !important;
+              box-shadow: 0px 8px 20px rgba(0, 0, 0, .45) !important;
+              padding: 10px 10px 18px 10px !important;
+              background-color: rgba(0, 0, 0, 0.8) !important;
+              border-radius: 20px !important;
+          }
+
+          /* Command palette text input */
+          .quick-input-filter .monaco-inputbox {
+              border-radius: 12px !important;
+              padding: 8px !important;
+              border: none !important;
+              background-color: rgba(34, 34, 34, .1) !important;
+              font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace !important;
+              font-size: 14px !important;
+              margin-bottom: 16px !important;
+          }
+
+          /* Command palette's input box placeholder. */
+          .monaco-inputbox input::placeholder {
+              color: rgba(233, 233, 233, 0.6) !important;
+          }
+        '';
+      };
       # waydroid = enabled // { weston-wrapper = enabled; };
       # zen-browser = enabled;
     };

@@ -32,6 +32,16 @@ in
   };
 
   config = mkIf cfg.enable {
+    nos.cli-apps.matugen.templates."waybar-colors" = {
+      outputPath = "/home/${config.nos.user.name}/.config/waybar/colors.css";
+      postHook = "pkill waybar; uwsm app -- waybar &";
+      text = ''
+        <* for name, value in colors *>
+          @define-color {{name}} {{value.default.hex}};
+        <* endfor *>
+      '';
+    };
+
     nos.home.extraOptions.programs.waybar = {
       inherit (cfg) enable package;
       settings = recursiveMergeAttrs [
@@ -40,11 +50,11 @@ in
             position = "top";
             layer = "top";
 
-            margin-top = 4;
+            margin-top = 6;
             margin-bottom = 0;
             margin-left = 8;
             margin-right = 8;
-            spacing = 0;
+            spacing = 4;
 
             modules-left = [
               "custom/launcher"
@@ -197,6 +207,10 @@ in
               format = "  {:%I:%M}";
               format-alt = "  {:%m/%d/%Y}";
             };
+
+            tray = {
+              icon-size = 20;
+            };
           };
         }
         cfg.extraSettings
@@ -211,17 +225,21 @@ in
           font = "CaskaydiaCode NF";
           font_size = "16px";
           font_weight = "bold";
-          opacity = "0.98";
 
           # TODO: Make colorscheme global.
           colorscheme = "catppuccin-mocha";
 
-          background = "#${palette.base00}";
-          text_color = "#${palette.base06}";
-          secondary_text_color = "#${palette.base04}";
-          active_text_color = "#${palette.base0D}";
+          background = if config.nos.cli-apps.matugen.enable then "@primary" else "#${palette.base00}";
+          text_color = if config.nos.cli-apps.matugen.enable then "@on_primary" else "#${palette.base06}";
+          secondary_text_color =
+            if config.nos.cli-apps.matugen.enable then "@inverse_primary" else "#${palette.base04}";
+          active_text_color =
+            if config.nos.cli-apps.matugen.enable then "@primary_container" else "#${palette.base0D}";
+
         in
         ''
+          ${if config.nos.cli-apps.matugen.enable then "@import \"colors.css\";" else ""}
+
           * {
             border: none;
             border-radius: 0px;
@@ -229,7 +247,6 @@ in
             font-family: ${font};
             font-size: ${font_size};
             font-weight: ${font_weight};
-            opacity: ${opacity};
           }
 
           window#waybar {
@@ -238,10 +255,9 @@ in
 
           #workspaces {
             margin: 1px 1px 1px 1px;
-            padding: 4px 6px;
+            padding: 5px 6px 4px 6px;
             background: ${background};
             border-radius: 15px;
-            border: 0px;
             font-style: normal;
           }
 
@@ -282,10 +298,13 @@ in
             background: ${background};
             color: ${text_color};
             border-radius: 15px;
-            /* padding: 2px 10px 0px 10px;
-            margin: 5px 15px 5px 0px; */
             margin: 1px 4px 1px 4px;
-            padding: 6px 10px;
+            padding: 7px 10px 6px 10px;
+          }
+
+          #custom-launcher {
+            padding: 0px 4px 0px 8px;
+            font-size: 24px;
           }
 
           #pulseaudio {
@@ -335,7 +354,133 @@ in
           .modules-right > widget:last-child > #workspaces {
               margin-right: 0;
           }
+
+          #tray {
+            -gtk-icon-shadow: 0 0 2px ${text_color};
+          }
         '';
+      # ''
+      #   ${if config.nos.cli-apps.matugen.enable then "@import \"colors.css\";" else ""}
+
+      #   * {
+      #     border: none;
+      #     border-radius: 0px;
+      #     font-family: ${font};
+      #     font-size: ${font_size};
+      #     font-weight: ${font_weight};
+      #     opacity: ${opacity};
+      #   }
+
+      #   window#waybar {
+      #     background: transparent;
+      #   }
+
+      #   #workspaces {
+      #     margin: 1px 1px 1px 1px;
+      #     padding: 4px 6px;
+      #     background: ${background};
+      #     border-radius: 15px;
+      #     border: 0px;
+      #     font-style: normal;
+      #   }
+
+      #   #workspaces button {
+      #     border-radius: 10px;
+      #     color: ${text_color};
+      #     padding: 2px 4px;
+      #     margin: 3px 3px;
+      #     min-width: 20px;
+      #   }
+
+      #   #workspaces button.empty {
+      #     color: ${secondary_text_color};
+      #   }
+
+      #   #workspaces button.active,
+      #   #workspaces button.active:hover,
+      #   #workspaces button:hover {
+      #     background: ${active_text_color};
+      #     color: ${background};
+      #   }
+
+      #   #workspaces button.active,
+      #   #workspaces button.active:hover {
+      #     min-width: 40px;
+      #   }
+
+      #   #pulseaudio,
+      #   #cpu,
+      #   #network,
+      #   #clock,
+      #   #tray,
+      #   #backlight,
+      #   #power-profiles-daemon,
+      #   #battery,
+      #   #custom-notifications {
+      #     background: ${background};
+      #     color: ${text_color};
+      #     border-radius: 15px;
+      #     margin: 1px 4px 1px 4px;
+      #     padding: 6px 10px;
+      #   }
+
+      #   #custom-launcher {
+      #     background: ${background};
+      #     color: ${text_color};
+      #     border-radius: 15px;
+      #     margin: 1px 4px 1px 4px;
+      #     padding: 6px 10px;
+      #     font-size: 24px;
+      #   }
+
+      #   #pulseaudio {
+      #     min-width: 75px;
+      #   }
+
+      #   #pulseaudio.muted {
+      #     background: #${palette.base08};
+      #     color: ${background};
+      #   }
+
+      #   #cpu {
+      #     min-width: 55px;
+      #   }
+
+      #   #battery.low {
+      #     background: #${palette.base08};
+      #     color: ${background};
+      #   }
+
+      #   #battery.critical:not(.charging) {
+      #     background: #${palette.base08};
+      #     color: ${background};
+      #     animation-name: blink;
+      #     animation-duration: 0.5s;
+      #     animation-timing-function: linear;
+      #     animation-iteration-count: infinite;
+      #     animation-direction: alternate;
+      #   }
+
+      #   #battery.charging {
+      #     background: #${palette.base0A};
+      #     color: ${background};
+      #   }
+
+      #   #network.disconnected {
+      #     background: #${palette.base08};
+      #     color: ${background};
+      #   }
+
+      #   /* If workspaces is the leftmost module, omit left margin */
+      #   .modules-left > widget:first-child > #workspaces {
+      #       margin-left: 0;
+      #   }
+
+      #   /* If workspaces is the rightmost module, omit right margin */
+      #   .modules-right > widget:last-child > #workspaces {
+      #       margin-right: 0;
+      #   }
+      # '';
     };
   };
 }
