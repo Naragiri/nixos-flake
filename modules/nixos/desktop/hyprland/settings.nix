@@ -61,7 +61,7 @@ in
       "$mod ALT, Q, exit" # exec, uwsm stop" doesn't work atm.
       "$mod, V, togglefloating"
       "$mod SHIFT, V, fullscreen"
-      "$mod SHIFT, period, exec, ${getExe config.nos.apps.vscode.package} /home/${config.nos.user.name}/Repos/naraos/nixos-flake"
+      "$mod SHIFT, period, exec, ${createUWSMCommand "${getExe config.nos.apps.vscode.package} /home/${config.nos.user.name}/Repos/naraos/nixos-flake"}"
       "$mod SHIFT, V, fullscreen"
       "$mod ALT, L, exec, ${createUWSMCommand "sleep 1 && hyprctl dispatch dpms off"}"
       ", XF86AudioRaiseVolume, exec, ${createUWSMCommand "wpctl set-volume @DEFAULT_SINK@ 5%+"}"
