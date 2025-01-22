@@ -62,39 +62,6 @@ in
         [colors.selection]
         text = '{{colors.background.default.hex}}'
         background = '{{colors.primary.default.hex}}'
-         
-         
-        [colors.normal]
-        black = '#181818' 
-        red = '{{colors.error.default.hex}}' 
-        green = '{{colors.primary.default.hex}}' 
-        yellow = '{{colors.inverse_primary.default.hex}}' 
-        blue = '{{colors.primary.default.hex}}' 
-        magenta = '{{colors.tertiary.default.hex}}' 
-        cyan = '{{colors.secondary.default.hex}}' 
-        white = '#BAC2DE' 
-         
-         
-        [colors.bright]
-        black = '#585B70' 
-        red = '#F38BA8' 
-        green = '#A6E3A1' 
-        yellow = '#F9E2AF' 
-        blue = '#89B4FA' 
-        magenta = '#F5C2E7' 
-        cyan = '#94E2D5' 
-        white = '#A6ADC8' 
-         
-         
-        [colors.dim]
-        black = '#45475A' 
-        red = '#F38BA8' 
-        green = '#A6E3A1' 
-        yellow = '#F9E2AF' 
-        blue = '#89B4FA' 
-        magenta = '#F5C2E7' 
-        cyan = '#94E2D5' 
-        white = '#BAC2DE' 
       '';
     };
 

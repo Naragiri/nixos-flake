@@ -25,6 +25,9 @@ in
       };
       clapper = enabled;
       discord = enabled;
+      easyeffects = enabled // {
+        preset = "perfect-eq";
+      };
       emulators = {
         citra = enabled;
         dolphin = enabled;

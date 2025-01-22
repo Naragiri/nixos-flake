@@ -18,14 +18,14 @@ in
   options.nos.apps.easyeffects = {
     enable = mkEnableOption "Enable easyeffects.";
     preset = mkOption {
-      default = null;
+      default = "";
       description = "The default preset to load.";
-      type = types.nullOr types.str;
+      type = types.str;
     };
   };
 
   config = mkIf cfg.enable {
-    nos.home.configFile."easyeffects/output/${cfg.preset}.json" = {
+    nos.home.configFile."easyeffects/output/${cfg.preset}.json" = mkIf (cfg.preset != "") {
       text = builtins.readFile ./${cfg.preset}.json;
     };
 
