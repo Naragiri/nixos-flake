@@ -91,8 +91,5 @@
           };
         };
       };
-    }
-    // {
-      nixosModules.nos = import ./modules;
     };
 }
